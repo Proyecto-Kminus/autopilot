@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0f172a" />
+    <title>Control Robot Bluetooth</title>
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="status-bar" aria-label="Estado del robot">
+        <div>
+          <p class="eyebrow">Robot Bluetooth</p>
+          <h1>Control remoto</h1>
+        </div>
+        <div id="connectionPill" class="connection-pill" data-state="disconnected">
+          <span class="status-dot"></span>
+          <span id="connectionState">Desconectado</span>
+        </div>
+      </section>
+
+      <section class="telemetry" aria-label="Coordenadas actuales">
+        <div class="telemetry-card">
+          <span>X</span>
+          <strong id="xValue">0.00</strong>
+        </div>
+        <div class="telemetry-card">
+          <span>Y</span>
+          <strong id="yValue">0.00</strong>
+        </div>
+      </section>
+
+      <section class="app-mode" aria-label="Modo de control">
+        <button id="manualModeButton" class="mode-tab is-active" type="button" aria-pressed="true">
+          Manual
+        </button>
+        <button id="recordingsModeButton" class="mode-tab" type="button" aria-pressed="false">
+          Grabaciones
+        </button>
+        <button id="locationsModeButton" class="mode-tab" type="button" aria-pressed="false">
+          Ubicaciones
+        </button>
+      </section>
+
+      <section class="settings-panel" aria-label="Configuracion de conexion">
+        <label class="mode-selector">
+          <span>Conexion</span>
+          <select id="connectionMode">
+            <option value="ble">Bluetooth BLE UART compatible</option>
+            <option value="serial">Serial HC-05 / HC-06</option>
+          </select>
+        </label>
+
+        <label class="mode-selector">
+          <span>Baudios HC-05</span>
+          <select id="baudRate">
+            <option value="9600">9600</option>
+            <option value="38400">38400</option>
+            <option value="57600">57600</option>
+            <option value="115200">115200</option>
+          </select>
+        </label>
+
+      </section>
+
+      <button id="connectButton" class="connect-button" type="button">
+        Conectar Bluetooth BLE
+      </button>
+
+      <section id="manualPanel" class="manual-panel" aria-label="Joystick de control">
+        <div class="control-pad">
+          <div id="joystickBase" class="joystick-base">
+            <div class="axis axis-x"></div>
+            <div class="axis axis-y"></div>
+            <div id="joystickKnob" class="joystick-knob" role="application" aria-label="Joystick tactil"></div>
+          </div>
+        </div>
+
+        <div class="recording-controls">
+          <label class="location-name">
+            <span>Nombre grabacion</span>
+            <input id="recordingNameInput" type="text" inputmode="text" maxlength="32" placeholder="Giro, prueba 1" />
+          </label>
+          <button id="recordButton" class="secondary-button record-button" type="button">
+            Iniciar grabacion
+          </button>
+        </div>
+      </section>
+
+      <section id="recordingsPanel" class="recordings-panel" aria-label="Grabaciones guardadas" hidden>
+        <label class="location-name obstacle-threshold">
+          <span>Esquivar si menor (cm)</span>
+          <input id="obstacleThresholdCm" type="number" inputmode="numeric" min="0" max="300" step="1" value="30" />
+        </label>
+
+        <div id="playbackProgress" class="playback-progress" hidden aria-live="polite">
+          <div>
+            <span>Reproduciendo</span>
+            <strong id="playbackProgressName">--</strong>
+          </div>
+          <div class="playback-step">
+            <span>Paso</span>
+            <strong id="playbackStepValue">0 / 0</strong>
+          </div>
+        </div>
+
+        <div class="saved-locations-header">
+          <span>Guardadas</span>
+          <button id="clearRecordingsButton" class="text-button" type="button">
+            Borrar todo
+          </button>
+        </div>
+
+        <div id="savedRecordingsList" class="saved-locations" aria-live="polite"></div>
+
+        <button id="stopPlaybackButton" class="connect-button stop-playback" type="button" hidden>
+          Detener reproduccion
+        </button>
+      </section>
+
+      <section id="locationsPanel" class="locations-panel" aria-label="Ubicaciones guardadas" hidden>
+        <div class="location-status">
+          <div>
+            <span>GPS movil</span>
+            <strong id="gpsState">Sin iniciar</strong>
+          </div>
+          <button id="refreshLocationButton" class="secondary-button" type="button">
+            Actualizar
+          </button>
+        </div>
+
+        <div class="gps-readout">
+          <div>
+            <span>Latitud</span>
+            <strong id="latitudeValue">--</strong>
+          </div>
+          <div>
+            <span>Longitud</span>
+            <strong id="longitudeValue">--</strong>
+          </div>
+          <div>
+            <span>Precision</span>
+            <strong id="accuracyValue">--</strong>
+          </div>
+        </div>
+
+        <label class="location-name">
+          <span>Nombre</span>
+          <input id="locationNameInput" type="text" inputmode="text" maxlength="32" placeholder="Base, puerta, punto 1" />
+        </label>
+
+        <button id="saveLocationButton" class="connect-button save-location" type="button">
+          Guardar ubicacion actual
+        </button>
+
+        <div class="saved-locations-header">
+          <span>Guardadas</span>
+          <button id="clearLocationsButton" class="text-button" type="button">
+            Borrar todo
+          </button>
+        </div>
+
+        <div id="savedLocationsList" class="saved-locations" aria-live="polite"></div>
+      </section>
+
+      <p id="messageLog" class="message-log" aria-live="polite">
+        Esperando conexion con el robot.
+      </p>
+    </main>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
